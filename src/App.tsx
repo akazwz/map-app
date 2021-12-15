@@ -1,10 +1,10 @@
 import React from 'react'
-import HomePage from './pages/HomePage'
+import MapBox from './pages/MapBox'
 
 function App() {
   return (
     <>
-      <HomePage />
+      <MapBox />
     </>
   )
 }
