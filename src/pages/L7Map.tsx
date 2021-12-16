@@ -1,23 +1,23 @@
 import React from 'react'
-import { LineLayer, AMapScene } from '@antv/l7-react';
+import { LineLayer, AMapScene, Control, Marker } from '@antv/l7-react'
 
-export default React.memo(function L7Map() {
-  const [data, setData] = React.useState();
+export default function L7Map() {
+  const [data, setData] = React.useState()
   React.useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async() => {
       const response = await fetch(
         'https://gw.alipayobjects.com/os/basement_prod/32e1f3ab-8588-46cb-8a47-75afb692117d.json',
-      );
-      const raw = await response.json();
-      setData(raw);
-    };
-    fetchData().then();
-  }, []);
+      )
+      const raw = await response.json()
+      setData(raw)
+    }
+    fetchData().then()
+  }, [])
   return (
     <>
       <AMapScene
         map={{
-          center: [110.19382669582967, 50.258134],
+          center: [116.40973, 39.918919],
           pitch: 0,
           style: 'dark',
           zoom: 1,
@@ -46,11 +46,15 @@ export default React.memo(function L7Map() {
               values: 'line',
             }}
             style={{
-              opacity: 1,
+              opacity: 0.1,
             }}
           />
         )}
+        <Marker lnglat={[116.40973, 39.918919]} />
+        <Control type="zoom" />
+        <Control type="scale" />
+        <Control type="logo" />
       </AMapScene>
     </>
-  );
-});
+  )
+};
