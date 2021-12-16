@@ -1,10 +1,10 @@
 import React from 'react'
-import MapBox from './pages/MapBox'
+import L7Map from './pages/L7Map'
 
 function App() {
   return (
     <>
-      <MapBox />
+      <L7Map />
     </>
   )
 }
