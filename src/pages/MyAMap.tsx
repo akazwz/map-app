@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   APILoader,
   ControlBarControl,
@@ -12,25 +12,33 @@ import {
 } from '@uiw/react-amap'
 
 const MyMap = () => {
-  const [lnglat, setLnglat] = useState<[number, number]>([0, 0])
-  const [markers, setMarkers] = useState<[[number, number]]>([[116.405285, 39.904989]])
+  const mapRef = useRef(null)
+  const [clickLngLat, setClickLnglat] = useState<AMap.LngLat>(new AMap.LngLat(0, 0))
+  const [markers, setMarkers] = useState<AMap.LngLat[]>([new AMap.LngLat(116.405285, 39.904989)])
 
   const handleMapOnClick = (evt: AMap.MapsEvent) => {
     const { lnglat } = evt
-    setLnglat([lnglat.getLng!(), lnglat.getLat!()])
+    const ll = new AMap.LngLat(lnglat.getLng!(), lnglat.getLat!())
+    setClickLnglat(ll)
+    setMarkers([...markers, ll])
   }
 
   const Markers = () => {
-    return markers.map((marker) => {
-      alert(marker[0])
-      return <Marker visiable={true} title="Beijing" position={new AMap.LngLat(marker[0], marker[1])} />
+    return markers.map((marker, index) => {
+      return <Marker key={index} visiable={true} title="Beijing" position={marker} />
     })
   }
 
   return (
     <>
       <div style={{ width: '100%', height: '70vh' }}>
-        <Map onClick={handleMapOnClick}>
+        <Map
+          ref={mapRef}
+          onClick={handleMapOnClick}
+          onRightClick={() => {
+          }
+          }
+        >
           <ScaleControl offset={[16, 30]} position="LB" />
           <ToolBarControl offset={[16, 10]} position="RB" />
           <ControlBarControl offset={[16, 180]} position="RB" />
@@ -55,7 +63,7 @@ const MyMap = () => {
         </Map>
       </div>
       <div style={{ width: '100%', height: '29vh' }}>
-        {lnglat[0]}, {lnglat[1]}
+        {clickLngLat.getLng!()}, {clickLngLat.getLat!()}
       </div>
     </>
   )
