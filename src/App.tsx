@@ -1,9 +1,11 @@
 import React from 'react'
-import Leaflet from './pages/Leaflet'
+import MyAMap from './pages/MyAMap'
 
 function App() {
   return (
-      <Leaflet />
+    <>
+      <MyAMap />
+    </>
   )
 }
 
