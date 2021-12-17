@@ -1,49 +1,70 @@
+import React, { useState } from 'react'
 import {
   APILoader,
-  Map,
-  ScaleControl,
-  ToolBarControl,
   ControlBarControl,
   Geolocation,
+  Map,
   MapTypeControl,
   Marker,
+  ScaleControl,
+  ToolBarControl,
   Weather,
 } from '@uiw/react-amap'
 
 const MyMap = () => {
+  const [lnglat, setLnglat] = useState<[number, number]>([0, 0])
+  const [markers, setMarkers] = useState<[[number, number]]>([[116.405285, 39.904989]])
+
+  const handleMapOnClick = (evt: AMap.MapsEvent) => {
+    const { lnglat } = evt
+    setLnglat([lnglat.getLng!(), lnglat.getLat!()])
+  }
+
+  const Markers = () => {
+    return markers.map((marker) => {
+      alert(marker[0])
+      return <Marker visiable={true} title="Beijing" position={new AMap.LngLat(marker[0], marker[1])} />
+    })
+  }
+
   return (
-    <div style={{ width: '100%', height: '70vh' }}>
-      <Map>
-        <ScaleControl offset={[16, 30]} position="LB" />
-        <ToolBarControl offset={[16, 10]} position="RB" />
-        <ControlBarControl offset={[16, 180]} position="RB" />
-        <Geolocation
-          type="position"
-          enableHighAccuracy={true}
-          maximumAge={100000}
-          borderRadius="5px"
-          position="RB"
-          offset={[16, 80]}
-          zoomToAccuracy={true}
-          showCircle={true}
-          getCityWhenFail={true}
-          onComplete={(data)=>{
-            console.log(data)
-          }}
-        />
-        <MapTypeControl
-          visiable={true}
-        />
-        <Marker visiable={true} title="北京市" position={new AMap.LngLat(116.405285, 39.904989)} />
-      </Map>
-    </div>
+    <>
+      <div style={{ width: '100%', height: '70vh' }}>
+        <Map onClick={handleMapOnClick}>
+          <ScaleControl offset={[16, 30]} position="LB" />
+          <ToolBarControl offset={[16, 10]} position="RB" />
+          <ControlBarControl offset={[16, 180]} position="RB" />
+          <Geolocation
+            type="position"
+            enableHighAccuracy={true}
+            maximumAge={100000}
+            borderRadius="5px"
+            position="RB"
+            offset={[16, 80]}
+            zoomToAccuracy={true}
+            showCircle={true}
+            getCityWhenFail={true}
+            onComplete={(data) => {
+              console.log(data)
+            }}
+          />
+          <MapTypeControl
+            visiable={true}
+          />
+          {Markers()}
+        </Map>
+      </div>
+      <div style={{ width: '100%', height: '29vh' }}>
+        {lnglat[0]}, {lnglat[1]}
+      </div>
+    </>
   )
 }
 
 const MyWeather = () => {
   return (
     <>
-      <Weather city="临沂市" onComplete={(data) => {
+      <Weather city="重庆市" onComplete={(data) => {
         console.log(data)
       }} />
     </>
