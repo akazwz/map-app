@@ -10,6 +10,7 @@ import {
   ToolBarControl,
   Weather,
 } from '@uiw/react-amap'
+import { ContextMenu } from '@uiw/react-amap-context-menu';
 
 const MyMap = () => {
   const mapRef = useRef(null)
@@ -23,11 +24,25 @@ const MyMap = () => {
     setMarkers([...markers, ll])
   }
 
+  const handleMapOnRightClick = (evt: AMap.MapsEvent) => {
+    const { lnglat } = evt
+    const ll = new AMap.LngLat(lnglat.getLng!(), lnglat.getLat!())
+    setClickLnglat(ll)
+  }
+
   const Markers = () => {
     return markers.map((marker, index) => {
-      return <Marker key={index} visiable={true} title="Beijing" position={marker} />
+      return <Marker
+        key={index}
+        visiable={true}
+        position={marker}
+        onRightClick={() => {
+          alert('right click')
+        }}
+      />
     })
   }
+
 
   return (
     <>
@@ -35,9 +50,7 @@ const MyMap = () => {
         <Map
           ref={mapRef}
           onClick={handleMapOnClick}
-          onRightClick={() => {
-          }
-          }
+          onRightClick={handleMapOnRightClick}
         >
           <ScaleControl offset={[16, 30]} position="LB" />
           <ToolBarControl offset={[16, 10]} position="RB" />
@@ -60,9 +73,16 @@ const MyMap = () => {
             visiable={true}
           />
           {Markers()}
+          {/*// @ts-ignore*/}
+          <ContextMenu>
+            {/*// @ts-ignore*/}
+            <ContextMenu.Item text="添加标记" onClick={()=>{
+              setMarkers([...markers, clickLngLat])
+            }}/>
+          </ContextMenu>
         </Map>
       </div>
-      <div style={{ width: '100%', height: '29vh' }}>
+      <div style={{ width: '100%', height: '25vh' }}>
         {clickLngLat.getLng!()}, {clickLngLat.getLat!()}
       </div>
     </>
